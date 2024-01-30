@@ -1,0 +1,12 @@
+[package]
+name = "gg-config"
+version = "0.0.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+serde = { version ="1.0.196", features = ["derive"] }
+serde_json = "1.0.113"
+void = "1.0.2"
+paste = "1.0.14"
