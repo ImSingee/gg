@@ -1,7 +1,16 @@
 [package]
 name = "gg"
+description = "redefining your workflow"
 version = "0.0.0"
 edition = "2021"
+repository = "https://github.com/ImSingee/gg"
+authors = ["ImSingee <git@singee.me>"]
+
+[package.metadata.wix]
+upgrade-guid = "3FF1B87D-3783-46F5-B754-C330119A2783"
+path-guid = "CCF03D6E-2A38-418F-84FD-B1BEF4272C48"
+license = false
+eula = false
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
