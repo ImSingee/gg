@@ -1,4 +1,5 @@
 use thiserror::Error;
+use gg_tui::ep_error;
 
 #[derive(Error, Debug)]
 pub(crate) enum Error {
@@ -15,7 +16,7 @@ impl Error {
         match self {
             Error::Clap(e) => e.exit(),
             Error::Err(e) => {
-                eprintln!("Error: {}", e);
+                ep_error!("{}", e);
                 std::process::exit(1);
             }
         }

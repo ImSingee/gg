@@ -6,6 +6,7 @@ use std::os::unix::process::CommandExt;
 use std::process::Command;
 use gg_config::OptionalLoadedConfig;
 use crate::result::{error, Result};
+use gg_tui::{ep_warning};
 
 #[derive(Args)]
 #[command(about = "run a pre-defined script")]
@@ -41,7 +42,7 @@ impl RunCommand {
         let root = match gg_git::get_root().await {
             Ok(root) => root,
             Err(_) => {
-                eprintln!("failed to get git root, run script in current directory");
+                ep_warning!("failed to get git root, run script in current directory");
                 env::current_dir().unwrap()
             }
         };

@@ -2,6 +2,7 @@ use std::env;
 use clap::{ArgMatches, Args, Command, command, FromArgMatches};
 use cmds::RunCommand;
 use gg_config::{Config, OptionalLoadedConfig};
+use gg_tui::ep_warning;
 use result::Result;
 use crate::result::{error, exit};
 
@@ -43,7 +44,7 @@ pub async fn get_matches(cmd: &mut Command) -> ArgMatches {
             let config = match config {
                 Ok(config) => config.get(),
                 Err(err) => {
-                    eprintln!("cannot load config: {}", err); // TODO use colorful warning
+                    ep_warning!("cannot load config: {}", err);
                     Config::default()
                 }
             };
