@@ -1,11 +1,11 @@
 use std::collections::{BTreeMap, HashMap};
+use std::convert::Infallible;
 use std::fmt;
 use std::hash::{BuildHasher, Hash};
 use std::marker::PhantomData;
 use std::str::FromStr;
 use serde::{de, Deserialize, Deserializer};
 use serde::de::{DeserializeSeed, MapAccess, Visitor};
-use void::Void;
 use paste::paste;
 
 // This is a Visitor that forwards string types to T's `FromStr` impl and
@@ -25,7 +25,7 @@ impl<T> Copy for StringOrStruct<T> {}
 
 impl<'de, T> Visitor<'de> for StringOrStruct<T>
     where
-        T: Deserialize<'de> + FromStr<Err=Void>,
+        T: Deserialize<'de> + FromStr<Err=Infallible>,
 {
     type Value = T;
 
@@ -54,7 +54,7 @@ impl<'de, T> Visitor<'de> for StringOrStruct<T>
 
 impl<'de, T> DeserializeSeed<'de> for StringOrStruct<T>
     where
-        T: Deserialize<'de> + FromStr<Err=Void>,
+        T: Deserialize<'de> + FromStr<Err=Infallible>,
 {
     type Value = T; // 根据需要设置正确的类型
 
@@ -69,7 +69,7 @@ impl<'de, T> DeserializeSeed<'de> for StringOrStruct<T>
 
 pub fn de_string_or_struct<'de, T, D>(deserializer: D) -> Result<T, D::Error>
     where
-        T: Deserialize<'de> + FromStr<Err=Void>,
+        T: Deserialize<'de> + FromStr<Err=Infallible>,
         D: Deserializer<'de> {
     deserializer.deserialize_any(StringOrStruct(PhantomData))
 }
@@ -102,7 +102,7 @@ macro_rules! map_impl {
             impl<'de, K, V $(, $typaram)*> Visitor<'de> for [<$name Visitor>]<K, V $(, $typaram)*>
             where
                 K: Deserialize<'de> $(+ $kbound1 $(+ $kbound2)*)*,
-                V: Deserialize<'de> + FromStr<Err=Void>,
+                V: Deserialize<'de> + FromStr<Err=Infallible>,
                 $($typaram: $bound1 $(+ $bound2)*),*
             {
                 type Value = $ty<K, V $(, $typaram)*>;
@@ -148,7 +148,7 @@ map_impl! {
 
 pub fn de_string_or_struct_hashmap<'de, T, D>(deserializer: D) -> Result<HashMap<String, T>, D::Error>
     where
-        T: Deserialize<'de> + FromStr<Err=Void>,
+        T: Deserialize<'de> + FromStr<Err=Infallible>,
         D: Deserializer<'de> {
     deserializer.deserialize_map(HashMapVisitor::<String, T, std::collections::hash_map::RandomState>(PhantomData))
 }
@@ -156,9 +156,9 @@ pub fn de_string_or_struct_hashmap<'de, T, D>(deserializer: D) -> Result<HashMap
 #[cfg(test)]
 mod tests {
     use std::collections::HashMap;
+    use std::convert::Infallible;
     use std::str::FromStr;
     use serde::Deserialize;
-    use void::Void;
 
     #[derive(Debug, Deserialize)]
     struct Foo1 {
@@ -167,7 +167,7 @@ mod tests {
     }
 
     impl FromStr for Foo1 {
-        type Err = Void;
+        type Err = Infallible;
 
         fn from_str(s: &str) -> Result<Self, Self::Err> {
             Ok(Foo1 {

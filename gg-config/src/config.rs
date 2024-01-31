@@ -1,9 +1,9 @@
 mod parse;
 
 use std::collections::HashMap;
+use std::convert::Infallible;
 use std::str::FromStr;
 use serde::{Deserialize, Serialize};
-use void::Void;
 use super::serde::*;
 
 pub use parse::parse;
@@ -22,7 +22,7 @@ pub struct Config {
 pub struct Script {}
 
 impl FromStr for Script {
-    type Err = Void;
+    type Err = Infallible;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         Ok(Script {})
