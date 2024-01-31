@@ -1,3 +1,6 @@
+use gg::{get_cmd, get_matches, run};
+
+
 fn main() {
-    println!("Hello, world!");
+    run(get_matches(get_cmd()));
 }
