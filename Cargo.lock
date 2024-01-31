@@ -167,15 +167,19 @@ dependencies = [
  "gg-config",
  "gg-git",
  "thiserror",
+ "tokio",
 ]
 
 [[package]]
 name = "gg-config"
 version = "0.0.0"
 dependencies = [
+ "gg-git",
  "paste",
  "serde",
  "serde_json",
+ "thiserror",
+ "tokio",
 ]
 
 [[package]]

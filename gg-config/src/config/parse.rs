@@ -1,7 +1,8 @@
 use super::Config;
+use crate::result::Result;
 
-pub fn parse(s: &str) -> Result<Config, serde_json::Error> {
-    serde_json::from_str(s)
+pub fn parse(s: &str) -> Result<Config> {
+    Ok(serde_json::from_str(s)?)
 }
 
 #[cfg(test)]

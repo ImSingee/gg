@@ -1,7 +1,9 @@
+use std::env;
 use clap::{ArgMatches, Args, Command, command, FromArgMatches};
 use cmds::RunCommand;
+use gg_config::{Config, OptionalLoadedConfig};
 use result::Result;
-use crate::result::{exit};
+use crate::result::{error, exit};
 
 mod cmds;
 mod result;
@@ -14,7 +16,7 @@ pub fn get_cmd() -> Command {
         )
 }
 
-pub fn run(mut cmd: Command, matches: ArgMatches) {
+pub async fn run(mut cmd: Command, matches: ArgMatches) {
     let result: Result<()> = match matches.subcommand() {
         Some(("run", m)) => {
             RunCommand::from_arg_matches(m).map_err(|err| err.exit()).unwrap().run()
@@ -29,13 +31,24 @@ pub fn run(mut cmd: Command, matches: ArgMatches) {
 }
 
 /// like cmd.get_matches, but will try to run subcommand if there is unknown argument
-pub fn get_matches(cmd: &mut Command) -> ArgMatches {
+pub async fn get_matches(cmd: &mut Command) -> ArgMatches {
     let matches = cmd.get_matches_mut();
 
 
     if let Some((subcommand, _)) = matches.subcommand() {
         if !cmd.get_subcommands().any(|c| c.get_name() == subcommand) {
             // unknown subcommand
+
+            let config = gg_config::auto_load_for_repo(env::current_dir().unwrap()).await;
+            let config = match config {
+                Ok(config) => config.get(),
+                Err(err) => {
+                    eprintln!("cannot load config: {}", err); // TODO use colorful warning
+                    Config::default()
+                }
+            };
+
+
             // TODO should be three case:
             // 1. scripts
             // 2. extension
@@ -43,7 +56,15 @@ pub fn get_matches(cmd: &mut Command) -> ArgMatches {
             // or unknown
 
             // TODO we only use case 1 now
-            let action = "run";
+            let action = {
+                if config.scripts.contains_key(subcommand) {
+                    "run"
+                } else {
+                    // unknown subcommand
+                    let err = error(&format!("unknown subcommand {}", subcommand));
+                    err.exit();
+                }
+            };
 
             let original_args: Vec<String> = std::env::args().collect();
 

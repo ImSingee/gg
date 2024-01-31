@@ -1,4 +1,5 @@
 mod parse;
+mod load;
 
 use std::collections::HashMap;
 use std::convert::Infallible;
@@ -6,10 +7,11 @@ use std::str::FromStr;
 use serde::{Deserialize, Serialize};
 use super::serde::*;
 
-pub use parse::parse;
+pub use parse::*;
+pub use load::*;
 
-#[derive(Deserialize)]
-#[cfg_attr(test, derive(Debug, Clone, PartialEq, Serialize, Default))]
+#[derive(Deserialize, Default)]
+#[cfg_attr(test, derive(Debug, Clone, PartialEq, Serialize))]
 pub struct Config {
     /// The required version of kitty
     pub gg: Option<String>,
@@ -17,8 +19,8 @@ pub struct Config {
     pub scripts: HashMap<String, Script>,
 }
 
-#[derive(Deserialize)]
-#[cfg_attr(test, derive(Debug, Clone, PartialEq, Serialize, Default))]
+#[derive(Deserialize, Default)]
+#[cfg_attr(test, derive(Debug, Clone, PartialEq, Serialize))]
 pub struct Script {}
 
 impl FromStr for Script {

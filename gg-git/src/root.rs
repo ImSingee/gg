@@ -17,12 +17,12 @@ impl G {
     }
 }
 
-async fn get_root() -> Result<PathBuf> {
+pub async fn get_root() -> Result<PathBuf> {
     let g = G::default();
     g.root().await
 }
 
-async fn is_root() -> Result<bool> {
+pub async fn is_root() -> Result<bool> {
     let g = G::default();
     g.is_root().await
 }

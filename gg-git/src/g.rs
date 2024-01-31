@@ -8,9 +8,10 @@ pub struct G {
 }
 
 impl G {
-    pub fn new(dir: &str) -> G {
-        G { dir: PathBuf::from(dir) }
+    pub fn new<P: Into<PathBuf>>(dir: P) -> G {
+        G { dir: dir.into() }
     }
+
 
     // pub fn new_with_env(dir: &str, envs: Vec<(String, String)>) -> G {
     //     G { dir: PathBuf::from(dir) }
