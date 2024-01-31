@@ -19,7 +19,7 @@ pub fn get_cmd() -> Command {
 pub async fn run(mut cmd: Command, matches: ArgMatches) {
     let result: Result<()> = match matches.subcommand() {
         Some(("run", m)) => {
-            RunCommand::from_arg_matches(m).map_err(|err| err.exit()).unwrap().run()
+            RunCommand::from_arg_matches(m).map_err(|err| err.exit()).unwrap().run().await
         }
         _ => {
             cmd.print_long_help().expect("cannot print help message");

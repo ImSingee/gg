@@ -21,12 +21,16 @@ pub struct Config {
 
 #[derive(Deserialize, Default)]
 #[cfg_attr(test, derive(Debug, Clone, PartialEq, Serialize))]
-pub struct Script {}
+pub struct Script {
+    pub command: String,
+}
 
 impl FromStr for Script {
     type Err = Infallible;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        Ok(Script {})
+        Ok(Script {
+            command: s.to_string(),
+        })
     }
 }
