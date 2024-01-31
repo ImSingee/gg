@@ -2,7 +2,7 @@ use clap::{ArgMatches, Args, Command, command, FromArgMatches};
 use clap::error::ErrorKind;
 use cmds::RunCommand;
 use result::Result;
-use crate::result::exit;
+use crate::result::{exit};
 
 mod cmds;
 mod result;
@@ -14,12 +14,13 @@ pub fn get_cmd() -> Command {
         )
 }
 
-pub fn run(cmd: Command, matches: ArgMatches) {
+pub fn run(mut cmd: Command, matches: ArgMatches) {
     let result: Result<()> = match matches.subcommand() {
         Some(("run", m)) => {
             RunCommand::from_arg_matches(m).map_err(|err| err.exit()).unwrap().run()
         }
         _ => {
+            cmd.print_long_help().expect("cannot print help message");
             Ok(())
         }
     };

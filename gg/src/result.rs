@@ -4,7 +4,7 @@ use thiserror::Error;
 pub(crate) enum Error {
     #[error("clap error")]
     Clap(#[from] clap::Error),
-    #[error]
+    #[error("{0}")]
     Err(String),
 }
 
