@@ -1,8 +1,11 @@
 use clap::{ArgMatches, Args, Command, command, FromArgMatches};
 use clap::error::ErrorKind;
 use cmds::RunCommand;
+use result::Result;
+use crate::result::exit;
 
 mod cmds;
+mod result;
 
 pub fn get_cmd() -> Command {
     command!()
@@ -11,17 +14,21 @@ pub fn get_cmd() -> Command {
         )
 }
 
-pub fn run(matches: ArgMatches) {
-    match matches.subcommand() {
+pub fn run(cmd: Command, matches: ArgMatches) {
+    let result: Result<()> = match matches.subcommand() {
         Some(("run", m)) => {
-            RunCommand::from_arg_matches(m).map_err(|err| err.exit()).unwrap().run();
+            RunCommand::from_arg_matches(m).map_err(|err| err.exit()).unwrap().run()
         }
-        _ => {}
-    }
+        _ => {
+            Ok(())
+        }
+    };
+
+    exit(result);
 }
 
 /// like cmd.get_matches, but will try to run subcommand if there is unknown argument
-pub fn get_matches(cmd: Command) -> ArgMatches {
+pub fn get_matches(cmd: &Command) -> ArgMatches {
     let matches = cmd.clone().try_get_matches();
     match matches {
         Ok(matches) => {
@@ -43,7 +50,7 @@ pub fn get_matches(cmd: Command) -> ArgMatches {
                     new_args.push("run".to_string());
                     new_args.extend_from_slice(&original_args[1..]);
 
-                    return cmd.get_matches_from(new_args);
+                    return cmd.clone().get_matches_from(new_args);
                 }
             }
 
