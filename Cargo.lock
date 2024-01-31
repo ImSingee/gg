@@ -306,7 +306,7 @@ dependencies = [
 
 [[package]]
 name = "gg"
-version = "0.0.0"
+version = "0.0.1"
 dependencies = [
  "cargo-util",
  "clap",
@@ -320,7 +320,7 @@ dependencies = [
 
 [[package]]
 name = "gg-config"
-version = "0.0.0"
+version = "0.0.1"
 dependencies = [
  "gg-git",
  "paste",
@@ -332,7 +332,7 @@ dependencies = [
 
 [[package]]
 name = "gg-git"
-version = "0.0.0"
+version = "0.0.1"
 dependencies = [
  "thiserror",
  "tokio",
@@ -340,7 +340,7 @@ dependencies = [
 
 [[package]]
 name = "gg-tui"
-version = "0.0.0"
+version = "0.0.1"
 dependencies = [
  "console",
 ]
