@@ -36,6 +36,12 @@ publish-jobs = ["homebrew"]
 # Publish jobs to run in CI
 pr-run-mode = "upload"
 
+[workspace.metadata.release]
+publish = false
+push = false
+shared-version = true
+tag-name = "v{{version}}"
+
 # The profile that 'cargo dist' will build with
 [profile.dist]
 inherits = "release"
