@@ -2,8 +2,7 @@ use std::env;
 use std::ops::Add;
 use shlex;
 use clap::Args;
-use std::os::unix::process::CommandExt;
-use std::process::Command;
+use cargo_util::ProcessBuilder;
 use gg_config::OptionalLoadedConfig;
 use crate::result::{error, Result};
 use gg_tui::{ep_warning};
@@ -56,7 +55,11 @@ impl RunCommand {
         let program = args[0].clone();
         let args = &args[1..];
 
-        let err = Command::new(program).args(args).current_dir(root).exec();
-        return Err(error(&format!("failed to execute command: {}", err)));
+        let err = ProcessBuilder::new(program).args(args).cwd(root).exec_replace().err();
+        if err.is_some() {
+            return Err(error(&format!("failed to execute command: {}", err.unwrap())));
+        }
+
+        return Ok(());
     }
 }
